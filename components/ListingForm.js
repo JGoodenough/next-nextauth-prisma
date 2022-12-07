@@ -28,22 +28,8 @@ const ListingForm = ({
   const [disabled, setDisabled] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialValues?.image ?? '');
 
-  const upload = async image => {
-    if (!image) return;
-
-    let toastId;
-    try {
-      setDisabled(true);
-      toastId = toast.loading('Uploading...');
-      const { data } = await axios.post('/api/image-upload', { image });
-      setImageUrl(data?.url);
-      toast.success('Successfully uploaded', { id: toastId });
-    } catch (e) {
-      toast.error('Unable to upload', { id: toastId });
-      setImageUrl('');
-    } finally {
-      setDisabled(false);
-    }
+  const upload = async (image) => {
+    // TODO: Upload image to remote storage
   };
 
   const handleOnSubmit = async (values = null) => {
