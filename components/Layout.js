@@ -74,7 +74,7 @@ const Layout = ({ children = null }) => {
                 </a>
               </Link>
               <div className="flex items-center space-x-4">
-                <Link href="/create">
+                <Link href="/homes/new">
                   <a className="hidden sm:block hover:bg-gray-200 transition px-3 py-1 rounded-md">
                     List your home
                   </a>

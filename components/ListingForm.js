@@ -27,7 +27,7 @@ const ListingForm = ({
   const [disabled, setDisabled] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialValues?.image ?? '');
 
-  const upload = async image => {
+  const upload = async (image) => {
     // TODO: Upload image to remote storage
   };
 
