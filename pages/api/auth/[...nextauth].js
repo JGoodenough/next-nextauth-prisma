@@ -8,6 +8,12 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export default NextAuth({
+  pages: {
+    signIn: '/',
+    signOut: '/',
+    error: '/',
+    verifyRequest: '/',
+  },
   providers: [
     EmailProvider({
       server: {

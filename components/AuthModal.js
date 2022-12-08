@@ -9,6 +9,7 @@ import { Formik, Form } from 'formik';
 import { Dialog, Transition } from '@headlessui/react';
 import { SparklesIcon, MailOpenIcon, XIcon } from '@heroicons/react/outline';
 import Input from './Input';
+import { signIn } from 'next-auth/react';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
@@ -86,6 +87,7 @@ const AuthModal = ({ show = false, onClose = () => null }) => {
       setConfirm(true);
       toast.dismiss(toastId);
     } catch (err) {
+      console.error(err);
       toast.error('Unable to sign in', { id: toastId });
     } finally {
       setDisabled(false);
