@@ -15,12 +15,13 @@ import {
   UserIcon,
 } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
+import { useSession, signOut } from 'next-auth/react';
 
 const menuItems = [
   {
     label: 'List a new home',
     icon: PlusIcon,
-    href: '/list',
+    href: '/homes/new',
   },
   {
     label: 'My homes',
@@ -35,17 +36,17 @@ const menuItems = [
   {
     label: 'Logout',
     icon: LogoutIcon,
-    onClick: () => null,
+    onClick: signOut,
   },
 ];
 
 const Layout = ({ children = null }) => {
   const router = useRouter();
-
+  const { data: session, status } = useSession();
   const [showModal, setShowModal] = useState(false);
 
-  const user = null;
-  const isLoadingUser = false;
+  const user = session?.user;
+  const isLoadingUser = status === 'loading';
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
