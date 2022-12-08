@@ -7,9 +7,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <>
       <AuthProvider session={session}>
         <Component {...pageProps} />
+        <Toaster />
       </AuthProvider>
-
-      <Toaster />
     </>
   );
 }
