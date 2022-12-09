@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
+import GoogleProvider from 'next-auth/providers/google';
 import nodemailer from 'nodemailer';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import Handlebars from 'handlebars';
@@ -73,6 +74,10 @@ export default NextAuth({
     verifyRequest: '/',
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    }),
     EmailProvider({
       sendVerificationRequest,
       maxAge: 10 * 60, // Magic links are valid for 10 min only
