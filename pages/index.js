@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import Layout from '@/components/Layout';
 import Grid from '@/components/Grid';
-const prisma = new PrismaClient();
+import { prisma } from '@/services/prisma';
 
 export default function Home({ homes = [] }) {
   return (
