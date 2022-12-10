@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Layout from '@/components/Layout';
 import ListingForm from '@/components/ListingForm';
+import { withAuth } from '@/lib/client.with-auth';
 
 const NewHome = () => {
   const addHome = (data) => axios.post('/api/homes', data);
@@ -23,5 +24,9 @@ const NewHome = () => {
     </Layout>
   );
 };
+
+export const getServerSideProps = withAuth(async (context) => {
+  return { props: {} };
+});
 
 export default NewHome;
