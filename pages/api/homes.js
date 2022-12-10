@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { prisma } from '@/services/prisma';
 
 export default async function handler(req, res) {
