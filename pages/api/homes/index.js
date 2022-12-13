@@ -1,7 +1,14 @@
-import { withServerAuth } from '@/lib/server.with-auth';
+import withServerAuth from '@/lib/server.with-auth';
 import { prisma } from '@/services/prisma';
+import { getSession } from 'next-auth/react';
 
 export default withServerAuth(async function handler(req, res) {
+  // Check if user is authenticated
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+
   switch (req.method) {
     case 'POST':
       try {
@@ -28,6 +35,7 @@ export default withServerAuth(async function handler(req, res) {
 
         res.status(200).json(home);
       } catch (e) {
+        console.error(e);
         res.status(500).json({ message: 'Something went wrong' });
       }
       break;
