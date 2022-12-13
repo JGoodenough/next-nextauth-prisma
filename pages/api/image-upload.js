@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { decode } from 'base64-arraybuffer';
-import { withServerAuth } from '@/lib/server.with-auth';
+import withServerAuth from '@/lib/server.with-auth';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
