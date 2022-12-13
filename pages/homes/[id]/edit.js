@@ -1,45 +1,11 @@
-import { getSession } from 'next-auth/react';
-import axios from 'axios';
+// pages/homes/[id]/edit.js
 import Layout from '@/components/Layout';
 import ListingForm from '@/components/ListingForm';
-import { prisma } from '@/lib/prisma';
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  const redirect = {
-    redirect: {
-      destination: '/',
-      permanent: false,
-    },
-  };
-
-  // Check if the user is authenticated
-  if (!session) {
-    return redirect;
-  }
-
-  // Retrieve the authenticated user
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { listedHomes: true },
-  });
-
-  // Check if authenticated user is the owner of this home
-  const id = context.params.id;
-  const home = user?.listedHomes?.find(home => home.id === id);
-  if (!home) {
-    return redirect;
-  }
-
-  return {
-    props: JSON.parse(JSON.stringify(home)),
-  };
-}
+import { withAuth } from '@/lib/client.with-auth';
+import { prisma } from '@/services/prisma';
+import { getSession } from 'next-auth/react';
 
 const Edit = (home = null) => {
-  const handleOnSubmit = data => axios.patch(`/api/homes/${home.id}`, data);
-
   return (
     <Layout>
       <div className="max-w-screen-sm mx-auto">
@@ -53,7 +19,6 @@ const Edit = (home = null) => {
               initialValues={home}
               buttonText="Update home"
               redirectPath={`/homes/${home.id}`}
-              onSubmit={handleOnSubmit}
             />
           ) : null}
         </div>
@@ -61,5 +26,31 @@ const Edit = (home = null) => {
     </Layout>
   );
 };
+
+export const getServerSideProps = withAuth(async (context) => {
+  const session = await getSession(context);
+
+  const redirect = {
+    redirect: {
+      destination: '/',
+      permanent: false,
+    },
+  };
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { listedHomes: true },
+  });
+  console.log(`USER ${user}`);
+  // Check if authenticated user is the owner of this home
+  const id = context.params.id;
+  const home = user?.listedHomes?.find((home) => home.id === id);
+  if (!home) {
+    return redirect;
+  }
+
+  return {
+    props: JSON.parse(JSON.stringify(home)),
+  };
+});
 
 export default Edit;

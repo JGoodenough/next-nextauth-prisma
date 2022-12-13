@@ -1,12 +1,7 @@
+import { withServerAuth } from '@/lib/server.with-auth';
 import { prisma } from '@/services/prisma';
-import { getSession } from 'next-auth/react';
 
-export default async function handler(req, res) {
-  const session = await getSession({ req });
-  if (!session) {
-    return res.status(401).json({ message: 'Unauthorized.' });
-  }
-
+export default withServerAuth(async function handler(req, res) {
   switch (req.method) {
     case 'POST':
       try {
@@ -42,4 +37,4 @@ export default async function handler(req, res) {
         .status(405)
         .json({ message: `HTTP method ${req.method} is not supported.` });
   }
-}
+});
