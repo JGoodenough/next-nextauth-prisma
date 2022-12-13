@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 import { decode } from 'base64-arraybuffer';
+import { withServerAuth } from '@/lib/server.with-auth';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -16,7 +17,7 @@ export const config = {
   },
 };
 
-export default async function handler(req, res) {
+export default withServerAuth(async function handler(req, res) {
   // Upload image to Supabase
   switch (req.method) {
     case 'POST':
@@ -65,4 +66,4 @@ export default async function handler(req, res) {
         .status(405)
         .json({ message: `HTTP method ${req.method} is not supported.` });
   }
-}
+});

@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import Image from 'next/image';
 import Layout from '@/components/Layout';
 import { prisma } from '@/services/prisma';
