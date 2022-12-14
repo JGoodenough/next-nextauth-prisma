@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import Grid from '@/components/Grid';
-import { withAuth } from '@/lib/client.with-auth';
+import { getServerSidePropsWithAuth } from '@/lib/client.with-auth';
 import { getSession } from 'next-auth/react';
 import { prisma } from '@/services/prisma';
 
@@ -18,21 +18,23 @@ const Homes = ({ homes = [] }) => {
   );
 };
 
-export const getServerSideProps = withAuth(async (context) => {
-  // Check if user is authenticated
-  const session = await getSession(context);
+export const getServerSideProps = getServerSidePropsWithAuth(
+  async (context) => {
+    // Check if user is authenticated
+    const session = await getSession(context);
 
-  // Get all homes from the authenticated user
-  const homes = await prisma.home.findMany({
-    where: { owner: { email: session.user.email } },
-    orderBy: { createdAt: 'desc' },
-  });
+    // Get all homes from the authenticated user
+    const homes = await prisma.home.findMany({
+      where: { owner: { email: session.user.email } },
+      orderBy: { createdAt: 'desc' },
+    });
 
-  return {
-    props: {
-      homes: JSON.parse(JSON.stringify(homes)),
-    },
-  };
-});
+    return {
+      props: {
+        homes: JSON.parse(JSON.stringify(homes)),
+      },
+    };
+  }
+);
 
 export default Homes;
