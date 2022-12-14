@@ -37,6 +37,7 @@ const ListingForm = ({
       setDisabled(true);
       toastId = toast.loading('Uploading...');
       const { data } = await axios.post('/api/image-upload', { image });
+      console.log(data?.url);
       setImageUrl(data?.url);
       toast.success('Successfully uploaded', { id: toastId });
     } catch (e) {
@@ -54,6 +55,7 @@ const ListingForm = ({
       toastId = toast.loading('Submitting...');
       // Submit data
       if (typeof onSubmit === 'function') {
+        console.log('imageUrl', imageUrl);
         await onSubmit({ ...values, image: imageUrl });
       }
       toast.success('Successfully submitted', { id: toastId });

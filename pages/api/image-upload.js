@@ -17,7 +17,7 @@ export const config = {
   },
 };
 
-export default withServerAuth(async function handler(req, res) {
+const handler = withServerAuth(async function handler(req, res) {
   // Upload image to Supabase
   switch (req.method) {
     case 'POST':
@@ -51,7 +51,9 @@ export default withServerAuth(async function handler(req, res) {
         const url = `${process.env.SUPABASE_URL.replace(
           '.co',
           '.in'
-        )}/storage/v1/object/public/${data.Key}`;
+        )}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${
+          data.path
+        }`;
 
         return res.status(200).json({ url });
       } catch (e) {
@@ -67,3 +69,5 @@ export default withServerAuth(async function handler(req, res) {
         .json({ message: `HTTP method ${req.method} is not supported.` });
   }
 });
+
+export default handler;
