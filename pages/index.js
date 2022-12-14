@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
 import Layout from '@/components/Layout';
 import Grid from '@/components/Grid';
 import { prisma } from '@/services/prisma';
+import { getSession } from 'next-auth/react';
 
-export default function Home({ homes = [] }) {
+export default function Home({ homes = [], favoriteHomes = [] }) {
   return (
     <Layout>
       <h1 className="text-xl font-medium text-gray-800">
@@ -13,17 +13,26 @@ export default function Home({ homes = [] }) {
         Explore some of the best places in the world
       </p>
       <div className="mt-8">
-        <Grid homes={homes} />
+        <Grid homes={homes} favoritedHomes={favoriteHomes} />
       </div>
     </Layout>
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    include: { favoriteHomes: { include: { home: true } } },
+  });
+
+  const favoriteHomes = user ? user.favoriteHomes.map((fh) => fh.home) : [];
+  console.log(favoriteHomes);
   const homes = await prisma.home.findMany();
   return {
     props: {
       homes: JSON.parse(JSON.stringify(homes)),
+      favoriteHomes: JSON.parse(JSON.stringify(favoriteHomes)),
     },
   };
 }
