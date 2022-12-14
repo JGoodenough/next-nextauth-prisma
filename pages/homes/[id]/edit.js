@@ -44,7 +44,7 @@ export const getServerSideProps = getServerSidePropsWithAuth(
       where: { email: session.user.email },
       select: { listedHomes: true },
     });
-    console.log(`USER ${user}`);
+
     // Check if authenticated user is the owner of this home
     const id = context.params.id;
     const home = user?.listedHomes?.find((home) => home.id === id);

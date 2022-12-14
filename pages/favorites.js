@@ -1,12 +1,30 @@
 import { getSession } from 'next-auth/react';
 import Layout from '@/components/Layout';
 import Grid from '@/components/Grid';
-import { prisma } from '@/lib/prisma';
 import { getServerSidePropsWithAuth } from '@/lib/client.with-auth';
+import { prisma } from '@/services/prisma';
 
 export const getServerSideProps = getServerSidePropsWithAuth(
   async (context) => {
-    // TODO
+    const redirect = {
+      destination: '/',
+      permanent: false,
+    };
+    const session = await getSession(context);
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { favoriteHomes: { include: { home: true } } },
+    });
+
+    if (!user) {
+      return redirect;
+    }
+
+    const favoriteHomes = user.favoriteHomes.map((fv) => fv.home);
+
+    return {
+      props: { homes: JSON.parse(JSON.stringify(favoriteHomes)) },
+    };
   }
 );
 
@@ -18,7 +36,7 @@ const Favorites = ({ homes = [] }) => {
         Manage your homes and update your listings
       </p>
       <div className="mt-8">
-        <Grid homes={homes} />
+        <Grid homes={homes} favoritedHomes={homes} />
       </div>
     </Layout>
   );

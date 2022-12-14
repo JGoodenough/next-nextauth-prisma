@@ -32,7 +32,7 @@ const handler = withServerAuth(async function handler(req, res) {
         res.status(200).json(home);
       } catch (e) {
         console.error(e);
-        res.status(500).json({ message: 'Something went wrong' });
+        res.status(500).json({ message: 'Something went wrong.' });
       }
       break;
     case 'DELETE':
@@ -50,7 +50,7 @@ const handler = withServerAuth(async function handler(req, res) {
         res.status(200).json(home);
       } catch (e) {
         console.error('DELETE ERROR', e);
-        res.status(500).json({ message: 'Something went wrong' });
+        res.status(500).json({ message: 'Something went wrong.' });
       }
       break;
     default:
