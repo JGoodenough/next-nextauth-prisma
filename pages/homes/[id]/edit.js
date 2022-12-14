@@ -3,9 +3,11 @@ import Layout from '@/components/Layout';
 import ListingForm from '@/components/ListingForm';
 import { withAuth } from '@/lib/client.with-auth';
 import { prisma } from '@/services/prisma';
+import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 const Edit = (home = null) => {
+  const editHome = (data) => axios.patch(`/api/homes/${home.id}`, data);
   return (
     <Layout>
       <div className="max-w-screen-sm mx-auto">
@@ -19,6 +21,7 @@ const Edit = (home = null) => {
               initialValues={home}
               buttonText="Update home"
               redirectPath={`/homes/${home.id}`}
+              onSubmit={editHome}
             />
           ) : null}
         </div>
