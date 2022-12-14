@@ -1,7 +1,7 @@
 // pages/homes/[id]/edit.js
 import Layout from '@/components/Layout';
 import ListingForm from '@/components/ListingForm';
-import { withAuth } from '@/lib/client.with-auth';
+import { getServerSidePropsWithAuth } from '@/lib/client.with-auth';
 import { prisma } from '@/services/prisma';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
@@ -30,30 +30,32 @@ const Edit = (home = null) => {
   );
 };
 
-export const getServerSideProps = withAuth(async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps = getServerSidePropsWithAuth(
+  async (context) => {
+    const session = await getSession(context);
 
-  const redirect = {
-    redirect: {
-      destination: '/',
-      permanent: false,
-    },
-  };
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { listedHomes: true },
-  });
-  console.log(`USER ${user}`);
-  // Check if authenticated user is the owner of this home
-  const id = context.params.id;
-  const home = user?.listedHomes?.find((home) => home.id === id);
-  if (!home) {
-    return redirect;
+    const redirect = {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { listedHomes: true },
+    });
+    console.log(`USER ${user}`);
+    // Check if authenticated user is the owner of this home
+    const id = context.params.id;
+    const home = user?.listedHomes?.find((home) => home.id === id);
+    if (!home) {
+      return redirect;
+    }
+
+    return {
+      props: JSON.parse(JSON.stringify(home)),
+    };
   }
-
-  return {
-    props: JSON.parse(JSON.stringify(home)),
-  };
-});
+);
 
 export default Edit;
