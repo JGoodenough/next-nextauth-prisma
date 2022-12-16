@@ -27,7 +27,6 @@ export async function getServerSideProps(context) {
   });
 
   const favoriteHomes = user ? user.favoriteHomes.map((fh) => fh.home) : [];
-  console.log(favoriteHomes);
   const homes = await prisma.home.findMany();
   return {
     props: {
