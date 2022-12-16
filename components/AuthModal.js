@@ -86,6 +86,7 @@ const AuthModal = ({ show = false, onClose = () => null }) => {
       setConfirm(true);
       toast.dismiss(toastId);
     } catch (err) {
+      console.error(err);
       toast.error('Unable to sign in', { id: toastId });
     } finally {
       setDisabled(false);

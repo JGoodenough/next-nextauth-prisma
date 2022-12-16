@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Home {
+  id          String   @id @default(cuid())
+  image       String?
+  title       String
+  description String
+  price       Float
+  guests      Int
+  beds        Int
+  baths       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  owner       User     @relation(fields: [userId], references: [id])
+  userId      String
+  favoriteUsers       UserFavoriteHomes[]
+}
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String
@@ -48,6 +64,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   listedHomes   Home[]
+  favoriteHomes UserFavoriteHomes[]
 }
 
 model VerificationToken {
@@ -58,17 +75,12 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Home {
-  id          String   @id @default(cuid())
-  image       String?
-  title       String
-  description String
-  price       Float
-  guests      Int
-  beds        Int
-  baths       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  owner       User     @relation(fields: [ownerId], references: [id])
-  ownerId     String
+model UserFavoriteHomes {
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  home Home @relation(fields: [homeId], references: [id])
+  homeId String
+  assignedAt DateTime @default(now())
+
+  @@id([userId, homeId])
 }

@@ -21,7 +21,7 @@ const menuItems = [
   {
     label: 'List a new home',
     icon: PlusIcon,
-    href: '/create',
+    href: '/homes/new',
   },
   {
     label: 'My homes',
@@ -42,12 +42,11 @@ const menuItems = [
 
 const Layout = ({ children = null }) => {
   const router = useRouter();
-
   const { data: session, status } = useSession();
+  const [showModal, setShowModal] = useState(false);
+
   const user = session?.user;
   const isLoadingUser = status === 'loading';
-
-  const [showModal, setShowModal] = useState(false);
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -55,10 +54,10 @@ const Layout = ({ children = null }) => {
   return (
     <>
       <Head>
-        <title>SupaVacation | The Modern Dev</title>
+        <title>Next, NextAuth, Prisma | Boilerplate</title>
         <meta
           name="title"
-          content="Learn how to Build a Fullstack App with Next.js, PlanetScale & Prisma | The Modern Dev"
+          content="Learn how to Build a Fullstack App with Next.js, NextAuth & Prisma | Boilerplate"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -71,14 +70,15 @@ const Layout = ({ children = null }) => {
                 <a className="flex items-center space-x-1">
                   <SparklesIcon className="shrink-0 w-8 h-8 text-rose-500" />
                   <span className="text-xl font-semibold tracking-wide">
-                    Supa<span className="text-rose-600">Vacation</span>
+                    Next, NextAuth,{' '}
+                    <span className="text-rose-600">Prisma</span>
                   </span>
                 </a>
               </Link>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => {
-                    session?.user ? router.push('/create') : openModal();
+                    session?.user ? router.push('/homes/new') : openModal();
                   }}
                   className="hidden sm:block hover:bg-gray-200 transition px-3 py-1 rounded-md"
                 >
