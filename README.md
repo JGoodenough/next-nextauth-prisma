@@ -10,11 +10,10 @@ Build a FullStack App with Next.js, Supabase & Prisma | The Modern Dev by
 
 ## Getting Started
 
-### 1. Clone the repository and install dependencies
+### 1. Install dependencies
 
 ```
-git clone https://github.com/AlterClassIO/supa-vacation
-cd supa-vacation
+cd next-nextauth-prisma
 npm install
 ```
 
