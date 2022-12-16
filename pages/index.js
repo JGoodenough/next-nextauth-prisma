@@ -21,10 +21,12 @@ export default function Home({ homes = [], favoriteHomes = [] }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-    include: { favoriteHomes: { include: { home: true } } },
-  });
+  const user = session?.user
+    ? await prisma.user.findUnique({
+        where: { email: session.user.email },
+        include: { favoriteHomes: { include: { home: true } } },
+      })
+    : null;
 
   const favoriteHomes = user ? user.favoriteHomes.map((fh) => fh.home) : [];
   const homes = await prisma.home.findMany();
