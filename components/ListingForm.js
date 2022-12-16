@@ -5,8 +5,6 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { Formik, Form } from 'formik';
-import axios from 'axios';
-
 import Input from '@/components/Input';
 import ImageUpload from '@/components/ImageUpload';
 
