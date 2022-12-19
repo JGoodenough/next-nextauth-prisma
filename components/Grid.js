@@ -3,44 +3,42 @@ import Card from '@/components/Card';
 import { ExclamationIcon } from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
-const Grid = ({ homes = [], favoritedHomes = [] }) => {
+const Grid = ({ homes = [], favoritedHomes = [], openModal = () => {} }) => {
   const isEmpty = homes.length === 0;
   const [userFavoriteHomes, setUserFavoriteHomes] = useState(favoritedHomes);
-
-  // useEffect(() => {
-  //   const fetchUserFavoriteHomes = async () => {
-  //     try {
-  //       const {
-  //         data: { homes },
-  //       } = await axios.get('/api/user/favorites');
-  //       setUserFavoriteHomes(homes);
-  //     } catch (e) {
-  //       toast.error('Unable to fetch user favorite homes.');
-  //     }
-  //   };
-  //   fetchUserFavoriteHomes();
-  // }, []);
+  const { data: session } = useSession();
 
   const toggleFavorite = async (id) => {
-    const isFavorite = userFavoriteHomes.some((fh) => fh.id === id);
-    if (isFavorite) {
-      const newFavoriteHomes = userFavoriteHomes.filter((fh) => fh.id !== id);
-      setUserFavoriteHomes(newFavoriteHomes);
-      await axios.delete(`/api/homes/${id}/favorite`);
-    } else {
-      try {
+    if (session?.user) {
+      const isFavorite = userFavoriteHomes.some((fh) => fh.id === id);
+      if (isFavorite) {
+        const newFavoriteHomes = userFavoriteHomes.filter((fh) => fh.id !== id);
+        setUserFavoriteHomes(newFavoriteHomes);
+        try {
+          await axios.delete(`/api/homes/${id}/favorite`);
+        } catch (e) {
+          toast.error(
+            'An error occurred. Unable to save home as favorite at this time.'
+          );
+          setUserFavoriteHomes(userFavoriteHomes);
+        }
+      } else {
         const favoriteHome = homes.find((h) => h.id === id);
-
         setUserFavoriteHomes([...userFavoriteHomes, favoriteHome]);
-        await axios.put(`/api/homes/${id}/favorite`);
-      } catch (e) {
-        toast.error(
-          'An error occurred. Unable to save home as favorite at this time.'
-        );
-        setUserFavoriteHomes(homes);
+        try {
+          await axios.put(`/api/homes/${id}/favorite`);
+        } catch (e) {
+          toast.error(
+            'An error occurred. Unable to save home as favorite at this time.'
+          );
+          setUserFavoriteHomes(userFavoriteHomes);
+        }
       }
+    } else {
+      openModal();
     }
   };
 
